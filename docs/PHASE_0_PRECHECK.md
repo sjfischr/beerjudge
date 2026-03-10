@@ -7,22 +7,22 @@ By the end of this phase, the project should be ready for application scaffoldin
 
 ## 1. Repository setup
 - [x] Initialize a git repository
-- [ ] Create the remote GitHub repository
-- [ ] Connect local repo to GitHub
+- [x] Create the remote GitHub repository
+- [x] Connect local repo to GitHub
 - [ ] Protect `main` as the deployable branch
-- [ ] Decide branch naming for feature work, for example `phase/1-foundation`
+- [x] Decide branch naming for feature work, use `phase/<n>-<slug>`
 
 ## 2. Runtime and tooling decisions
-- [ ] Confirm Node.js version target (`20.x` recommended for current Next.js + Vercel compatibility)
-- [ ] Confirm package manager (`npm` recommended for simplicity)
-- [ ] Confirm TypeScript strict mode will remain enabled
-- [ ] Confirm Vercel is the production deployment target
+- [x] Confirm Node.js version target (`20.x` recommended for current Next.js + Vercel compatibility)
+- [x] Confirm package manager (`npm` recommended for simplicity)
+- [x] Confirm TypeScript strict mode will remain enabled
+- [x] Confirm Vercel is the production deployment target
 
 ## 3. Supabase project setup
-- [ ] Create the Supabase project
-- [ ] Save project URL
-- [ ] Save anon key
-- [ ] Save service role key if admin/server-side privileged actions will be used
+- [x] Create the Supabase project
+- [x] Save project URL
+- [x] Save anon key
+- [x] Save service role key if admin/server-side privileged actions will be used
 - [ ] Decide whether local Supabase CLI usage is required from the start
 
 ## 4. Environment variables
@@ -33,6 +33,10 @@ Required for Phase 1:
 Likely needed soon after:
 - `SUPABASE_SERVICE_ROLE_KEY`
 
+Status:
+- [x] `.env.local` populated
+- [x] `.env.example` restored as a sanitized template
+
 ## 5. Authentication and test users
 Prepare a small validation set:
 - [ ] 1 admin account
@@ -41,22 +45,24 @@ Prepare a small validation set:
 - [ ] Verify at least one account can sign in through Supabase Auth
 
 ## 6. External data dependency check
-The architecture brief references:
+Original architecture note:
 - `https://raw.githubusercontent.com/lrdodge/bjcp-style-data/master/json/style-data.json`
 
-Current findings:
-- The repository is reachable.
-- The default branch shown is `master`.
-- The `json/` folder appears to contain `style-data-2008.json`, not a 2021 `style-data.json` file.
-- The referenced raw URL currently returns 404.
+Final Phase 0 decision:
+- Treat the local BJCP 2021 DOCX as the canonical source.
+- Normalize the DOCX with Pandoc into Markdown.
+- Extract seed-oriented structured data from the Pandoc Markdown.
 
-### Decision required before Phase 1 seed work
-Choose one of these before building the seed script:
-1. Replace the source with a verified 2021 BJCP JSON source.
-2. Vendor a local curated 2021 JSON file into the repo.
-3. Adjust the seed scope to the available dataset and revisit 2021 coverage later.
+Current local source chain:
+- Canonical source: `docs/2021_Guidelines_Beer_1.25.docx`
+- Pandoc output: `docs/BJCP_2021_GUIDELINES.md`
+- Structured extraction preview: `docs/BJCP_2021_STYLES_EXTRACT.csv`
+- Extraction review notes: `docs/BJCP_2021_EXTRACTION_SUMMARY.md`
 
-Recommendation: vendor or identify a verified 2021 source before Phase 1 begins, so the seed script is deterministic.
+Current extraction status:
+- 102 styles discovered
+- 84 styles parsed with numeric vital statistics
+- 18 specialty styles flagged for manual review in Phase 1 seed work
 
 ## 7. Recommended repository structure
 
@@ -75,16 +81,17 @@ Recommendation: vendor or identify a verified 2021 source before Phase 1 begins,
 ```
 
 ## 8. Risks to lock now
-- BJCP 2021 data source is not yet verified.
+- `main` branch protection still needs to be configured in GitHub if desired.
 - Invite flow may require service-role-backed server logic.
 - Blind judging depends on strict query discipline, not just UI hiding.
 - Competition state transitions must be enforced server-side from the first admin phase.
+- 18 specialty BJCP styles still require manual validation during seed implementation.
 
 ## 9. Exit criteria
 Phase 0 is complete when:
 - [x] Local git repository exists
-- [ ] GitHub remote exists and is connected
-- [ ] Supabase project exists
-- [ ] Environment variables are documented and available
-- [ ] BJCP seed source decision is made
-- [ ] Team agrees to execute prompts in order
+- [x] GitHub remote exists and is connected
+- [x] Supabase project exists
+- [x] Environment variables are documented and available
+- [x] BJCP seed source decision is made
+- [x] Team agrees to execute prompts in order

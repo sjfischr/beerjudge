@@ -30,7 +30,12 @@ Tasks:
 5. Set up Supabase auth with email/password login.
 6. Create middleware that protects all routes except the landing page and login page.
 7. Create Supabase utilities for browser and server usage.
-8. Create a BJCP seed script using a verified BJCP data source. If the originally referenced source is unavailable, use the agreed replacement source from Phase 0 and document it in the code comments or README.
+8. Create a BJCP seed script using the Phase 0 local BJCP 2021 source workflow:
+   - canonical source: `docs/2021_Guidelines_Beer_1.25.docx`
+   - normalized markdown: `docs/BJCP_2021_GUIDELINES.md`
+   - extracted seed preview: `docs/BJCP_2021_STYLES_EXTRACT.csv`
+   - review list: `docs/BJCP_2021_EXTRACTION_SUMMARY.md`
+   Use the extracted CSV as the baseline and handle the flagged specialty styles intentionally rather than silently dropping them.
 9. Build a basic layout with top nav, current user, logout, and a landing page showing the current active competition or a no-active-competition message.
 
 Requirements:
