@@ -36,3 +36,37 @@ select {
 ::selection {
   background: rgba(245, 158, 11, 0.25);
 }
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  header,
+  nav,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  a:link,
+  a:visited {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  textarea,
+  input {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

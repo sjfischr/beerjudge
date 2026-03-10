@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import CsvExportButton from '@/components/CsvExportButton';
 import { requireAdmin } from '@/lib/admin';
 import { createClient } from '@/lib/supabase/server';
 
@@ -43,6 +44,27 @@ export default async function AdminCompetitionScoresPage({ params }: { params: P
     scoresByEntry.set(scoresheet.entry_id, existing);
   }
 
+  const csvRows = (scoresheets ?? []).map((score) => {
+    const judge = memberMap.get(score.judge_id);
+    const entry = (entries ?? []).find((e) => e.id === score.entry_id);
+
+    return {
+      competition_id: competition.id,
+      competition_name: competition.name,
+      entry_number: entry?.entry_number ?? '',
+      bjcp_style: entry ? `${entry.bjcp_category}${entry.bjcp_subcategory} ${entry.bjcp_style_name}` : '',
+      judge: judge?.display_name || judge?.email || score.judge_id,
+      status: score.status,
+      total_score: score.total_score ?? '',
+      aroma_comments: score.aroma_comments ?? '',
+      appearance_comments: score.appearance_comments ?? '',
+      flavor_comments: score.flavor_comments ?? '',
+      mouthfeel_comments: score.mouthfeel_comments ?? '',
+      overall_comments: score.overall_comments ?? '',
+      submitted_at: score.submitted_at ?? '',
+    };
+  });
+
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
@@ -51,9 +73,15 @@ export default async function AdminCompetitionScoresPage({ params }: { params: P
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-700">Scores overview</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-stone-900">{competition.name}</h2>
           </div>
-          <Link href={`/admin/competitions/${competition.id}`} className="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-600 hover:text-amber-700">
-            Back to competition
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <CsvExportButton filename={`brewjudge-${competition.id}-scoresheets.csv`} rows={csvRows} />
+            <Link
+              href={`/admin/competitions/${competition.id}`}
+              className="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-600 hover:text-amber-700"
+            >
+              Back to competition
+            </Link>
+          </div>
         </div>
       </section>
 

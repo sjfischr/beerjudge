@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import { getMemberProfile } from '@/lib/auth';
-import { getCurrentCompetition } from '@/lib/competitions';
+import { formatCompetitionStatus } from '@/lib/competition-status';
+import { getCurrentCompetition, getPastCompetitions } from '@/lib/competitions';
 
 function formatDate(date: string | null) {
   if (!date) {
@@ -14,7 +15,13 @@ function formatDate(date: string | null) {
 }
 
 export default async function HomePage() {
-  const [member, competition] = await Promise.all([getMemberProfile(), getCurrentCompetition()]);
+  const [member, competition, pastCompetitions] = await Promise.all([
+    getMemberProfile(),
+    getCurrentCompetition(),
+    getPastCompetitions(),
+  ]);
+
+  const latestClosed = pastCompetitions[0] ?? null;
 
   return (
     <div className="space-y-10">
@@ -35,10 +42,43 @@ export default async function HomePage() {
             >
               {member ? 'Open dashboard' : 'Member login'}
             </Link>
-            <span className="inline-flex items-center rounded-full border border-stone-300 bg-white px-5 py-3 text-sm text-stone-600">
-              Built for 5–10 entries and club-scale judging sessions
-            </span>
+            <Link
+              href="/history"
+              className="inline-flex items-center rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-amber-400 hover:text-amber-800"
+            >
+              Browse history
+            </Link>
           </div>
+
+          {latestClosed ? (
+            <div className="mt-8 rounded-[1.75rem] border border-amber-200 bg-white/70 p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Most recent results</p>
+              <h2 className="mt-3 text-xl font-semibold text-stone-900">{latestClosed.name}</h2>
+              <p className="mt-2 text-sm leading-6 text-stone-600">
+                Status: {formatCompetitionStatus(latestClosed.status)}. View ranked results and your feedback.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link
+                  href={`/competitions/${latestClosed.id}/results`}
+                  className="inline-flex items-center rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
+                >
+                  View results
+                </Link>
+                <Link
+                  href={`/history/${latestClosed.id}`}
+                  className="inline-flex items-center rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-amber-400 hover:text-amber-800"
+                >
+                  Archive details
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-8 rounded-[1.75rem] border border-dashed border-amber-200 bg-white/60 p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Most recent results</p>
+              <h2 className="mt-3 text-xl font-semibold text-stone-900">No closed competitions yet</h2>
+              <p className="mt-2 text-sm leading-6 text-stone-600">Once a competition closes, results will show here.</p>
+            </div>
+          )}
         </div>
 
         <div className="rounded-[2rem] border border-stone-200 bg-[var(--card)] p-8 shadow-sm">
