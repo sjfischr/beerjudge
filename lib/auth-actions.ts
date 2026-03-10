@@ -1,8 +1,8 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { env } from '@/lib/env';
 import { createClient } from '@/lib/supabase/server';
 
 export type AuthFormState = {
@@ -12,24 +12,6 @@ export type AuthFormState = {
 
 function normalizeNextPath(next: string) {
   return next.startsWith('/') ? next : '/dashboard';
-}
-
-async function getRequestOrigin() {
-  const headerStore = await headers();
-  const origin = headerStore.get('origin');
-
-  if (origin) {
-    return origin;
-  }
-
-  const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
-
-  if (!host) {
-    return null;
-  }
-
-  const protocol = headerStore.get('x-forwarded-proto') ?? (host.includes('localhost') ? 'http' : 'https');
-  return `${protocol}://${host}`;
 }
 
 export async function signInAction(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -65,8 +47,7 @@ export async function signUpAction(_: AuthFormState, formData: FormData): Promis
     return { error: 'Password must be at least 8 characters long.', success: null };
   }
 
-  const origin = await getRequestOrigin();
-  const emailRedirectTo = origin ? `${origin}/auth/callback?next=${encodeURIComponent(next)}` : undefined;
+  const emailRedirectTo = `${env.siteUrl}/auth/callback?next=${encodeURIComponent(next)}`;
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
