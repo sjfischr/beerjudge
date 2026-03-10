@@ -23,7 +23,7 @@ Use this guide while running BrewJudge phase prompts in order.
    - judge
    - admin
 4. Fix issues before moving to the next phase.
-5. Commit using a phase-specific message.
+5. Commit using a phase-specific message and push to GitHub so Vercel deploys the updated application.
 
 ## BJCP 2021 source workflow
 Use the local BJCP 2021 source files prepared in Phase 0.

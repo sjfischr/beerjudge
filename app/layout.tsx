@@ -31,9 +31,17 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   <Link href="/" className="transition hover:text-amber-700">
                     Home
                   </Link>
+                  <Link href="/competitions/history" className="transition hover:text-amber-700">
+                    History
+                  </Link>
                   {member ? (
                     <Link href="/dashboard" className="transition hover:text-amber-700">
                       Dashboard
+                    </Link>
+                  ) : null}
+                  {member?.is_admin ? (
+                    <Link href="/admin" className="transition hover:text-amber-700">
+                      Admin
                     </Link>
                   ) : null}
                 </div>
