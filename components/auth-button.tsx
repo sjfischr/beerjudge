@@ -12,7 +12,7 @@ export function AuthButton({ member }: AuthButtonProps) {
     return (
       <Link
         href="/login"
-        className="inline-flex items-center rounded-full bg-amber-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-800"
+        className="inline-flex items-center rounded-full bg-amber-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-800 shadow-sm"
       >
         Login
       </Link>
@@ -28,7 +28,7 @@ export function AuthButton({ member }: AuthButtonProps) {
       <form action={signOutAction}>
         <button
           type="submit"
-          className="inline-flex items-center rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-600 hover:text-amber-700"
+          className="inline-flex items-center rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-600 hover:text-amber-700 shadow-sm"
         >
           Logout
         </button>

@@ -212,6 +212,31 @@ export async function updateCompetitionStatusAction(formData: FormData) {
   redirect(buildRedirectUrl(redirectTo, 'success', 'Competition status updated.'));
 }
 
+export async function forceUpdateCompetitionStatusAction(formData: FormData) {
+  await requireAdmin();
+
+  const competitionId = String(formData.get('competition_id') ?? '');
+  const nextStatusValue = String(formData.get('next_status') ?? '');
+  const redirectTo = normalizeRedirectPath(formData, `/admin/competitions/${competitionId}`);
+
+  if (!competitionId || !isCompetitionStatus(nextStatusValue)) {
+    redirect(buildRedirectUrl(redirectTo, 'error', 'Invalid emergency status override request.'));
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from('competitions').update({ status: nextStatusValue }).eq('id', competitionId);
+
+  if (error) {
+    redirect(buildRedirectUrl(redirectTo, 'error', error.message));
+  }
+
+  revalidatePath('/');
+  revalidatePath('/dashboard');
+  revalidatePath(`/admin/competitions/${competitionId}`);
+  revalidatePath(`/competitions/${competitionId}`);
+  redirect(buildRedirectUrl(redirectTo, 'success', 'Competition status override applied.'));
+}
+
 export async function assignJudgeAction(formData: FormData) {
   await requireAdmin();
 

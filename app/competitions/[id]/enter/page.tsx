@@ -28,7 +28,7 @@ export default async function CompetitionEntryPage({
     notFound();
   }
 
-  if (competition.status !== 'accepting_entries') {
+  if (competition.status !== 'accepting_entries' && !member.is_admin) {
     redirect(`/competitions/${competition.id}`);
   }
 
@@ -44,6 +44,11 @@ export default async function CompetitionEntryPage({
         </p>
       ) : null}
       {flash.error ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{flash.error}</p> : null}
+      {member.is_admin && competition.status !== 'accepting_entries' ? (
+        <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Admin override: this competition is not currently accepting entries, but administrators can still create entries when needed.
+        </p>
+      ) : null}
 
       <section className="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">

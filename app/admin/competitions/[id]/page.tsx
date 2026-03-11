@@ -6,6 +6,7 @@ import { FormSubmitButton } from '@/components/form-submit-button';
 import {
   assignJudgeAction,
   autoAssignJudgesAction,
+  forceUpdateCompetitionStatusAction,
   removeJudgeAssignmentAction,
   updateCompetitionStatusAction,
 } from '@/lib/admin-actions';
@@ -77,6 +78,9 @@ export default async function AdminCompetitionDetailPage({
             <Link href={`/competitions/${competition.id}`} className="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-600 hover:text-amber-700">
               Public page
             </Link>
+            <Link href={`/competitions/${competition.id}/enter`} className="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-600 hover:text-amber-700">
+              Create admin entry
+            </Link>
             <Link href={`/admin/competitions/${competition.id}/scores`} className="rounded-full bg-amber-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-800">
               Scores overview
             </Link>
@@ -117,6 +121,41 @@ export default async function AdminCompetitionDetailPage({
             </form>
           ))}
           {!nextStatuses.length ? <p className="self-center text-sm text-stone-500">No further status transitions are available.</p> : null}
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 text-sm text-stone-700">
+          <p className="font-semibold text-stone-900">Emergency flexibility</p>
+          <p className="mt-2 leading-6 text-stone-600">
+            If a live competition needs a manual recovery path, admins can force a status change and continue working.
+          </p>
+          <form action={forceUpdateCompetitionStatusAction} className="mt-4 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="competition_id" value={competition.id} />
+            <input type="hidden" name="redirect_to" value={`/admin/competitions/${competition.id}`} />
+            <div className="min-w-56 space-y-2">
+              <label htmlFor="override-status" className="block text-sm font-medium text-stone-700">
+                Force status
+              </label>
+              <select id="override-status" name="next_status" defaultValue={competition.status} className="w-full rounded-2xl border border-stone-300 px-4 py-3 outline-none transition focus:border-amber-600">
+                {Object.entries({
+                  setup: 'Setup',
+                  accepting_entries: 'Accepting entries',
+                  judging: 'Judging',
+                  closed: 'Closed',
+                  archived: 'Archived',
+                }).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <ConfirmSubmitButton
+              idleText="Apply override"
+              pendingText="Applying..."
+              confirmMessage="Force this competition to the selected status? Use only when recovering from an operational issue."
+              className="rounded-full border border-amber-300 px-4 py-3 text-sm font-semibold text-amber-900 transition hover:border-amber-500 hover:text-amber-950 disabled:opacity-70"
+            />
+          </form>
         </div>
       </section>
 

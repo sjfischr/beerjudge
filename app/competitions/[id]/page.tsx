@@ -63,9 +63,9 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
         </dl>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          {member && competition.status === 'accepting_entries' ? (
+          {member && (competition.status === 'accepting_entries' || member.is_admin) ? (
             <Link href={`/competitions/${competition.id}/enter`} className="rounded-full bg-amber-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-amber-800">
-              Submit entry
+              {member.is_admin && competition.status !== 'accepting_entries' ? 'Admin entry override' : 'Submit entry'}
             </Link>
           ) : null}
           {member && ['closed', 'archived'].includes(competition.status) ? (

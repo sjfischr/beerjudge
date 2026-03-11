@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 
 import './globals.css';
 
 import { AuthButton } from '@/components/auth-button';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { getMemberProfile } from '@/lib/auth';
 
 export const metadata: Metadata = {
@@ -11,14 +13,32 @@ export const metadata: Metadata = {
   description: 'Blind judging and digital BJCP-style scoresheets for club competitions.',
 };
 
+const themeBootstrapScript = `
+(() => {
+  try {
+    const storedPreference = window.localStorage.getItem('brewjudge-theme') || 'system';
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const resolvedTheme = storedPreference === 'system' ? (prefersDark ? 'dark' : 'light') : storedPreference;
+    document.documentElement.dataset.themePreference = storedPreference;
+    document.documentElement.dataset.theme = resolvedTheme;
+  } catch (error) {
+    document.documentElement.dataset.themePreference = 'system';
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+`;
+
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const member = await getMemberProfile();
 
   return (
-    <html lang="en">
-      <body>
-        <div className="min-h-screen">
-          <header className="border-b border-stone-200 bg-white/90 backdrop-blur">
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <Script id="theme-bootstrap" strategy="beforeInteractive">
+          {themeBootstrapScript}
+        </Script>
+        <div className="page-shell min-h-screen">
+          <header className="glass-header border-b border-stone-200 bg-white/90 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
               <div>
                 <Link href="/" className="text-2xl font-semibold tracking-tight text-stone-900">
@@ -45,7 +65,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                     </Link>
                   ) : null}
                 </div>
-                <AuthButton member={member} />
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <AuthButton member={member} />
+                </div>
               </nav>
             </div>
           </header>

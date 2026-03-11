@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { getMemberProfile, getSessionUser } from '@/lib/auth';
 import { getBjcpStylesByCodes, normalizeAllowedStyleCodes } from '@/lib/bjcp';
-import { getSessionUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 
 function buildRedirectUrl(basePath: string, type: 'success' | 'error', message: string, entryNumber?: number) {
@@ -20,6 +20,7 @@ function buildRedirectUrl(basePath: string, type: 'success' | 'error', message: 
 
 export async function createEntryAction(formData: FormData) {
   const user = await getSessionUser();
+  const member = await getMemberProfile();
 
   if (!user) {
     redirect('/login');
@@ -45,7 +46,7 @@ export async function createEntryAction(formData: FormData) {
     redirect(buildRedirectUrl(redirectTo, 'error', 'Competition not found.'));
   }
 
-  if (competition.status !== 'accepting_entries') {
+  if (competition.status !== 'accepting_entries' && !member?.is_admin) {
     redirect(buildRedirectUrl(redirectTo, 'error', 'This competition is not accepting entries right now.'));
   }
 
@@ -82,5 +83,6 @@ export async function createEntryAction(formData: FormData) {
   revalidatePath('/dashboard');
   revalidatePath(`/competitions/${competitionId}`);
   revalidatePath(`/competitions/${competitionId}/enter`);
+  revalidatePath(`/admin/competitions/${competitionId}`);
   redirect(buildRedirectUrl(redirectTo, 'success', 'Entry submitted successfully.', data.entry_number));
 }
