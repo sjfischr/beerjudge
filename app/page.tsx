@@ -26,7 +26,7 @@ export default async function HomePage() {
   return (
     <div className="space-y-10">
       <section className="grid gap-8 lg:grid-cols-[1.3fr_0.9fr]">
-        <div className="rounded-[2rem] border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-8 shadow-sm">
+        <div className="glass-hero rounded-[2rem] border border-amber-200 p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-700">BrewJudge</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900">
             Run blind homebrew competitions without paper scoresheets.
@@ -51,7 +51,7 @@ export default async function HomePage() {
           </div>
 
           {latestClosed ? (
-            <div className="mt-8 rounded-[1.75rem] border border-amber-200 bg-white/70 p-6">
+            <div className="glass-panel-strong mt-8 rounded-[1.75rem] border border-amber-200 p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Most recent results</p>
               <h2 className="mt-3 text-xl font-semibold text-stone-900">{latestClosed.name}</h2>
               <p className="mt-2 text-sm leading-6 text-stone-600">
@@ -73,7 +73,7 @@ export default async function HomePage() {
               </div>
             </div>
           ) : (
-            <div className="mt-8 rounded-[1.75rem] border border-dashed border-amber-200 bg-white/60 p-6">
+            <div className="glass-panel-strong mt-8 rounded-[1.75rem] border border-dashed border-amber-200 p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Most recent results</p>
               <h2 className="mt-3 text-xl font-semibold text-stone-900">No closed competitions yet</h2>
               <p className="mt-2 text-sm leading-6 text-stone-600">Once a competition closes, results will show here.</p>
