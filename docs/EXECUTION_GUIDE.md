@@ -37,11 +37,13 @@ Canonical inputs and derived artifacts:
 Recommended regeneration flow:
 1. Convert the DOCX to Markdown with Pandoc.
 2. Run the extraction script to rebuild the CSV preview and review summary.
-3. During Phase 1, use the CSV as the starting point for the `bjcp_styles` seed and manually resolve the flagged specialty styles.
+3. Seed `bjcp_styles` from the CSV.
+4. During Phase 1, use the CSV as the starting point for the `bjcp_styles` seed and manually resolve the flagged specialty styles.
 
 Windows commands used in this repo:
 - `& "$env:LOCALAPPDATA\Pandoc\pandoc.exe" ".\docs\2021_Guidelines_Beer_1.25.docx" -t gfm -o ".\docs\BJCP_2021_GUIDELINES.md"`
 - `& ".\scripts\parse-bjcp-2021.ps1"`
+- `npm run seed:bjcp`
 
 Notes:
 - If `pandoc` is not on `PATH`, reopen the terminal or call the executable from `$env:LOCALAPPDATA\Pandoc\pandoc.exe`.

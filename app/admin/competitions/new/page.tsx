@@ -13,11 +13,17 @@ export default async function NewCompetitionPage({
 
   const categories = groupStylesByCategory(await getAllBjcpStyles());
   const flash = await searchParams;
+  const stylesLoaded = categories.length > 0;
 
   return (
     <div className="space-y-6">
       {flash.success ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{flash.success}</p> : null}
       {flash.error ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{flash.error}</p> : null}
+      {!stylesLoaded ? (
+        <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          BJCP styles have not been seeded into the database yet. Run the BJCP seed step before creating competitions.
+        </p>
+      ) : null}
 
       <section className="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
         <h2 className="text-2xl font-semibold text-stone-900">Create competition</h2>
@@ -64,7 +70,13 @@ export default async function NewCompetitionPage({
             </div>
           </div>
 
-          <StyleSelector categories={categories} />
+          {stylesLoaded ? (
+            <StyleSelector categories={categories} />
+          ) : (
+            <div className="rounded-3xl border border-dashed border-stone-300 bg-stone-50 p-6 text-sm text-stone-600">
+              No BJCP styles are currently available in `bjcp_styles`.
+            </div>
+          )}
 
           <FormSubmitButton
             idleText="Create competition"
