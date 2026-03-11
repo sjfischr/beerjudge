@@ -123,7 +123,7 @@ export default async function AdminCompetitionDetailPage({
           {!nextStatuses.length ? <p className="self-center text-sm text-stone-500">No further status transitions are available.</p> : null}
         </div>
 
-        <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 text-sm text-stone-700">
+        <div className="glass-panel-strong mt-6 rounded-3xl border border-amber-200 p-5 text-sm text-stone-700">
           <p className="font-semibold text-stone-900">Emergency flexibility</p>
           <p className="mt-2 leading-6 text-stone-600">
             If a live competition needs a manual recovery path, admins can force a status change and continue working.
